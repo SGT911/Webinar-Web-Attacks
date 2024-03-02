@@ -99,7 +99,8 @@ class Post(Exporter[dict]):
     Post model
     """
 
-    def __init__(self, title: str, user_name: str, content: Optional[str] = None):
+    def __init__(self, title: str, user_name: str, content: Optional[str] = None, _id: Optional[int] = None):
+        self.id = _id
         assert 10 <= len(title) <= 150, err.LENGTH_NOT_VALID.format(field='title', min=10, max=150)
         self.title = title
 
@@ -116,3 +117,8 @@ class Post(Exporter[dict]):
 
     def load(self, data: dict) -> Post:
         return Post(**data)
+
+    def __repr__(self) -> str:
+        if self.id is not None:
+            return f'<Post(by={self.user_name!r}, id={self.id:d})>'
+        return f'<Post(by={self.user_name!r}, title={self.title!r})>'

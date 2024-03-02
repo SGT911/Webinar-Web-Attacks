@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, Optional, List, Tuple
-from domain.models import User
+from domain.models import User, Post
 
 T = TypeVar('T')
 
@@ -39,4 +39,10 @@ class UserRepository(Repository[User], ABC):
 
     @abstractmethod
     def by_user_id(self, user_name: str) -> User:
+        raise NotImplementedError()
+
+
+class PostRepository(Repository[Post], ABC):
+    @abstractmethod
+    def filter(self, user_name: Optional[str] = None, title: Optional[str] = None) -> List[Post]:
         raise NotImplementedError()
