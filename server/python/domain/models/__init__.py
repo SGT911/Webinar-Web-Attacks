@@ -92,3 +92,27 @@ class User(Exporter[dict]):
 
     def __repr__(self) -> str:
         return '<User({user_name!s}, {full_name!r})>'.format(user_name=self.user_name, full_name=self.full_name.title())
+
+
+class Post(Exporter[dict]):
+    """
+    Post model
+    """
+
+    def __init__(self, title: str, user_name: str, content: Optional[str] = None):
+        assert 10 <= len(title) <= 150, err.LENGTH_NOT_VALID.format(field='title', min=10, max=150)
+        self.title = title
+
+        assert 4 <= len(user_name) <= 16, err.LENGTH_NOT_VALID.format(field='user_name', min=4, max=16)
+        assert _user_name_pattern.match(user_name) is not None, \
+            err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern)
+        self.user_name = user_name.upper()
+
+        assert content is None or len(content) != 0, err.EMPTY.format(field='content')
+        self.content = content
+
+    def export(self) -> dict:
+        return dict(title=self.title, user_name=self.user_name, content=self.content)
+
+    def load(self, data: dict) -> Post:
+        return Post(**data)
