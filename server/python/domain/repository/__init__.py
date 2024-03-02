@@ -2,6 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, Optional, List, Tuple
 from domain.models import User, Post
+from datetime import date
 
 T = TypeVar('T')
 
@@ -45,4 +46,8 @@ class UserRepository(Repository[User], ABC):
 class PostRepository(Repository[Post], ABC):
     @abstractmethod
     def filter(self, user_name: Optional[str] = None, title: Optional[str] = None) -> List[Post]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def time_range(self, since: Optional[date] = None, until: Optional[date] = None) -> List[Post]:
         raise NotImplementedError()

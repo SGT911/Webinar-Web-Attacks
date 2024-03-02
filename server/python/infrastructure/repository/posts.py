@@ -1,10 +1,11 @@
 from __future__ import annotations
-from typing import Optional, List, Tuple
+from typing import Optional, List
 from infrastructure.utils.mysql import get_pool as get_mysql_pool, get_schema
 from mysql.connector.pooling import PooledMySQLConnection
 from mysql.connector.cursor import CursorBase
 from domain.repository import PostRepository
 from domain.models import Post
+from datetime import date
 import domain.errors as err
 from infrastructure.repository import TableUnsafeEnsure
 
@@ -40,7 +41,8 @@ class MysqlUnsafeRepository(PostRepository, TableUnsafeEnsure):
                         `ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                         `TITLE` VARCHAR(150) NOT NULL,
                         `USER_NAME` VARCHAR(16) NOT NULL,
-                        `CONTENT` TEXT NULL
+                        `CONTENT` TEXT NULL,
+                        `CREATION_DATE` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
                     ); 
                 ''')
 
@@ -141,6 +143,27 @@ class MysqlUnsafeRepository(PostRepository, TableUnsafeEnsure):
                         FROM `{table!s}`
                     WHERE `TITLE` LIKE '%{title!s}%' AND `USER_NAME` LIKE '%{user_name!s}%'
                 '''.format(table=self.TABLE_NAME, title=title, user_name=user_name))
+
+                data = cursor.fetchall()
+                return [Post(title=row[0], user_name=row[1], content=row[2], _id=row[3]) for row in data]
+
+    @TableUnsafeEnsure.ensure_table_exists
+    def time_range(self, since: Optional[date] = None, until: Optional[date] = None) -> List[Post]:
+        if since is None:
+            since = date.min
+
+        if until is None:
+            until = date.max
+
+        with self.__connection as conn:
+            with conn.cursor() as cursor:
+                cursor: CursorBase = cursor
+
+                cursor.execute('''
+                    SELECT `TITLE`, `USER_NAME`, `CONTENT`, `ID`
+                        FROM `{table!s}`
+                    WHERE `CREATION_DATE` BETWEEN '{since!s}' AND '{until!s}' 
+                '''.format(table=self.TABLE_NAME, since=since, until=until))
 
                 data = cursor.fetchall()
                 return [Post(title=row[0], user_name=row[1], content=row[2], _id=row[3]) for row in data]
