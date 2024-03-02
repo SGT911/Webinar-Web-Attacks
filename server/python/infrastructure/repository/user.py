@@ -146,3 +146,18 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
                     raise AssertionError(err.NOT_FOUND.format(model='user', id=_id))
 
                 conn.commit()
+
+    @TableUnsafeEnsure.ensure_table_exists
+    def by_user_id(self, user_name: str) -> User:
+        with self.__connection as conn:
+            with conn.cursor() as cursor:
+                cursor: CursorBase = cursor
+                cursor.execute('''
+                    SELECT `USER_NAME`, `FULL_NAME`
+                        FROM `{table!s}`
+                    WHERE `USER_NAME` = {user_name!s}
+                '''.format(table=self.TABLE_NAME, user_name=user_name))
+
+                data = cursor.fetchone()
+                assert data is not None, err.NOT_FOUND.format(model='user', id=user_name)
+                return User(user_name=data[0], full_name=data[1])

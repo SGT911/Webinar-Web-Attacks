@@ -37,5 +37,6 @@ class UserRepository(Repository[User], ABC):
     def by_login(self, user_name: str, password: str) -> Tuple[User, int]:
         raise NotImplementedError()
 
+    @abstractmethod
     def by_user_id(self, user_name: str) -> User:
         raise NotImplementedError()
