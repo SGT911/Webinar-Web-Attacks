@@ -5,8 +5,8 @@ from os import environ as env
 from domain.providers import PasswordHasher
 from infrastructure.providers import PASSWORD_HASHER_PROVIDERS
 
-from infrastructure.repository.user import MysqlUnsafeRepository as UserMysqlUnsafeRepository
-from infrastructure.repository.posts import MysqlUnsafeRepository as PostMysqlUnsafeRepository
+from infrastructure.repositories.users import MysqlUnsafeRepository as UserMysqlUnsafeRepository
+from infrastructure.repositories.posts import MysqlUnsafeRepository as PostMysqlUnsafeRepository
 
 load_dotenv()
 

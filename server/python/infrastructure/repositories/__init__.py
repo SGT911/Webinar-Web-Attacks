@@ -5,7 +5,7 @@ from functools import wraps
 
 class TableUnsafeEnsure(ABC):
     """
-    Utility to ensure and create a table in a repository
+    Utility to ensure and create a table in a repositories
     """
 
     TABLE_NAME = '<not implemented>'

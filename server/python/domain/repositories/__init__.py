@@ -9,7 +9,7 @@ T = TypeVar('T')
 
 class Repository(Generic[T], ABC):
     """
-    Generic repository accessor interface
+    Generic repositories accessor interface
     """
 
     @abstractmethod
