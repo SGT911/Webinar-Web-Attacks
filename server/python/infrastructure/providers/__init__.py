@@ -5,6 +5,11 @@ from typing import Optional
 from domain.providers import PasswordHasher
 from hashlib import md5, sha512
 
+PASSWORD_HASHER_PROVIDERS = {
+    'MD5': lambda: MD5PasswordHasher(),
+    'SALT_SHA512': lambda: SaltSHA512PasswordHasher(),
+}
+
 
 class MD5PasswordHasher(PasswordHasher):
     """
