@@ -4,7 +4,7 @@ from domain.errors import *
 _get_error_name = lambda code: code.split('(', 1)[0]
 
 _MESSAGES = {
-    _get_error_name(LENGTH_NOT_VALID): "field {0!s} must have a length between {1!d} and {2!d}",
+    _get_error_name(LENGTH_NOT_VALID): "field {0!s} must have a length between {1:d} and {2:d}",
     _get_error_name(PATTERN_NOT_VALID): "field {0!s} does not match pattern {1!r}",
     _get_error_name(EMPTY): "field {0!s} can not be empty or null",
     _get_error_name(EQUALS): "field {0!s} not suffer change",

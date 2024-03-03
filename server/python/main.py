@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, Response, url_for, redirect, session
+from flask_session import Session
 from dotenv import load_dotenv
 from os import environ as env
 
@@ -8,9 +9,14 @@ from infrastructure.providers import PASSWORD_HASHER_PROVIDERS
 from infrastructure.repositories.users import MysqlUnsafeRepository as UserMysqlUnsafeRepository
 from infrastructure.repositories.posts import MysqlUnsafeRepository as PostMysqlUnsafeRepository
 
+from routes.users import router as users_router
+
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
+app.secret_key = env.get('SECRET_KEY', 'test')
+app.config['SESSION_TYPE'] = 'null'
+Session()
 
 CONFIG_PASSWORD_HASHER = env.get('DOMAIN_PASSWORD_HASHER', 'MD5')
 CONFIG_REPOSITORY_PROVIDER = env.get('REPOSITORY_PROVIDER', None)
@@ -25,6 +31,17 @@ if CONFIG_REPOSITORY_PROVIDER == 'MYSQL_UNSAFE':
     app.config['POST_REPOSITORY'] = PostMysqlUnsafeRepository()
 else:
     raise AssertionError(f'unknown repository provider: {CONFIG_REPOSITORY_PROVIDER}')
+
+
+@app.route('/', methods=['GET'])
+def home():
+    if 'session_id' not in session:
+        return redirect(url_for('users.login_form'))
+
+    return Response(repr(session), content_type='text/plain')
+
+
+app.register_blueprint(users_router, url_prefix='/users')
 
 if __name__ == '__main__':
     app.debug = True

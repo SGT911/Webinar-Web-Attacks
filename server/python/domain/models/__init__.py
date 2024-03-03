@@ -43,7 +43,7 @@ class User(Exporter[dict]):
     def __init__(self, user_name: str, full_name: str, password: Optional[Union[str, bytes]] = None):
         assert 4 <= len(user_name) <= 16, err.LENGTH_NOT_VALID.format(field='user_name', min=4, max=16)
         assert _user_name_pattern.match(user_name) is not None, \
-            err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern)
+            err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern.pattern)
         self.user_name = user_name.upper()
 
         assert len(full_name) != 0, err.EMPTY.format(field='full_name')
@@ -54,7 +54,7 @@ class User(Exporter[dict]):
                 self.password = password
             else:
                 assert len(password) != 0, err.EMPTY.format(field='password')
-                assert 8 <= len(password), err.LENGTH_NOT_VALID.format(field='password', min=8, max=10e10)
+                assert 8 <= len(password), err.LENGTH_NOT_VALID.format(field='password', min=8, max=1000)
                 self.password = PasswordHasher.hash(password)
 
     def load(self, data: dict) -> User:
@@ -71,7 +71,7 @@ class User(Exporter[dict]):
         """
 
         assert len(new_password) != 0, err.EMPTY.format(field='new_password')
-        assert 8 <= len(new_password), err.LENGTH_NOT_VALID.format(field='new_password', min=8, max=10e10)
+        assert 8 <= len(new_password), err.LENGTH_NOT_VALID.format(field='new_password', min=8, max=1000)
         assert new_password != password, err.EQUALS.format(field='password')
         assert self.verify_password(password), err.INVALID_CREDENTIAL
 

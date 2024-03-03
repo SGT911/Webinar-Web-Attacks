@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+
+{% set title = "LogIn" %}
+
+{% block body %}
+    <br>
+    <div class="row is-center ">
+        <form accept-charset="{{ url_for('users.login_action') }}" method="POST" class="card col-4">
+            <header class="is-center">
+                <h1>LogIn</h1>
+            </header>
+            <div x-data="{showPassword: false}">
+                {% if error %}
+                    {% if error is string %}
+                        <p style="color: var(--color-error);">{{ error }}</p>
+                    {% else %}
+                        <ul style="color: var(--color-error);">
+                        {% for err in error %}
+                        	<li>{{ err }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+                <p>
+                    <label for="user_name">User Name</label>
+                    <input required value="{{ user_name or '' }}" type="text" id="user_name" name="user_name" placeholder="HelloWorld">
+                </p>
+                <p>
+                    <label for="password">Password</label>
+                    <input required x-bind:type="showPassword? 'text' : 'password'" id="password" name="password" placeholder="S3cur3P455w0rd">
+                </p>
+                <p>
+                    <label for="showPassword"><input x-on:click="showPassword = !showPassword" type="checkbox" id="showPassword"> Show password</label>
+                </p>
+                <p>
+                    <a href="/users/register">No account?, Register now!</a>
+                </p>
+            </div>
+            <br>
+            <footer class="is-right">
+                <button class="button primary" type="submit">Submit</button>
+                <button class="button" type="reset">Clear</button>
+            </footer>
+        </form>
+    </div>
+{% endblock %}
