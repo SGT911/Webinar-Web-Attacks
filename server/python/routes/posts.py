@@ -51,3 +51,7 @@ def create_action():
         user=user,
     ))
 
+
+@router.route('/view/<int:_id>', methods=['GET'])
+def by_id(_id: int):
+    pass

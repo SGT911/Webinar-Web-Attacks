@@ -99,3 +99,8 @@ def profile_action():
         return redirect(url_for('home'))
 
     return make_response(render_template('users/profile.html', error=message, user=user))
+
+
+@router.route('/view/<user_name>', methods=['GET'])
+def by_id(user_name: str):
+    pass
