@@ -25,8 +25,9 @@ class Exporter(Generic[T], ABC):
         """
         raise NotImplementedError()
 
+    @staticmethod
     @abstractmethod
-    def load(self, data: T) -> Exporter:
+    def load(data: T) -> Exporter:
         """
         Load a serializable instance of the model into the model
 
@@ -41,14 +42,29 @@ class User(Exporter[dict]):
     User model
     """
 
-    def __init__(self, user_name: str, full_name: str, password: Optional[Union[str, bytes]] = None):
+    @property
+    def user_name(self) -> str:
+        return self._user_name
+
+    @user_name.setter
+    def user_name(self, user_name: str) -> None:
         assert 4 <= len(user_name) <= 16, err.LENGTH_NOT_VALID.format(field='user_name', min=4, max=16)
         assert _user_name_pattern.match(user_name) is not None, \
             err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern.pattern)
-        self.user_name = user_name.upper()
+        self._user_name = user_name.upper()
 
+    @property
+    def full_name(self) -> str:
+        return self._full_name
+
+    @full_name.setter
+    def full_name(self, full_name: str) -> None:
         assert len(full_name) != 0, err.EMPTY.format(field='full_name')
-        self.full_name = full_name.lower()
+        self._full_name = full_name.lower()
+
+    def __init__(self, user_name: str, full_name: str, password: Optional[Union[str, bytes]] = None):
+        self.user_name = user_name
+        self.full_name = full_name
 
         if password is not None:
             if isinstance(password, bytes):
@@ -58,8 +74,9 @@ class User(Exporter[dict]):
                 assert 8 <= len(password), err.LENGTH_NOT_VALID.format(field='password', min=8, max=1000)
                 self.password = PasswordHasher.hash(password)
 
-    def load(self, data: dict) -> User:
-        return User(data['username'], data['full_name'])
+    @staticmethod
+    def load(data: dict) -> User:
+        return User(data['user_name'], data['full_name'])
 
     def export(self) -> dict:
         return dict(user_name=self.user_name, full_name=self.full_name)
@@ -100,23 +117,47 @@ class Post(Exporter[dict]):
     Post model
     """
 
-    def __init__(self, title: str, user_name: str, content: Optional[str] = None, _id: Optional[int] = None):
-        self.id = _id
-        assert 10 <= len(title) <= 150, err.LENGTH_NOT_VALID.format(field='title', min=10, max=150)
-        self.title = title
+    @property
+    def title(self) -> str:
+        return self._title
 
+    @title.setter
+    def title(self, title: str) -> None:
+        assert 10 <= len(title) <= 150, err.LENGTH_NOT_VALID.format(field='title', min=10, max=150)
+        self._title = title
+
+    @property
+    def user_name(self) -> str:
+        return self._user_name
+
+    @user_name.setter
+    def user_name(self, user_name: str) -> None:
         assert 4 <= len(user_name) <= 16, err.LENGTH_NOT_VALID.format(field='user_name', min=4, max=16)
         assert _user_name_pattern.match(user_name) is not None, \
             err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern)
-        self.user_name = user_name.upper()
 
+        self._user_name = user_name.upper()
+
+    @property
+    def content(self) -> str:
+        return self._content
+
+    @content.setter
+    def content(self, content: str) -> None:
         assert content is None or len(content) != 0, err.EMPTY.format(field='content')
+        self._content = content
+
+    def __init__(self, title: str, user_name: str, content: Optional[str] = None, _id: Optional[int] = None):
+        self.id = _id
+        self.title = title
+        self.user_name = user_name
         self.content = content
 
     def export(self) -> dict:
         return dict(title=self.title, user_name=self.user_name, content=self.content)
 
-    def load(self, data: dict) -> Post:
+    @staticmethod
+    def load(data: dict) -> Post:
         return Post(**data)
 
     def __repr__(self) -> str:

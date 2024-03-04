@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% set header = True %}
+{% set title = "Profile" %}
+
+{% block body %}
+    <br>
+    <div class="row is-center">
+        <form accept-charset="{{ url_for('users.profile_action') }}" method="POST" class="card col-4" x-data="{
+            showPassword: false,
+            userName: '{{ user.user_name or '' }}',
+            editUserName: false,
+            fullName: '{{ (user.full_name or '') | title }}',
+            editFullName: false,
+            editPassword: false,
+        }">
+            <header class="is-center">
+                <h1>Update my profile</h1>
+            </header>
+            <div>
+                {% if error %}
+                    {% if error is string %}
+                        <p style="color: var(--color-error);">{{ error }}</p>
+                    {% else %}
+                        <ul style="color: var(--color-error);">
+                        {% for err in error %}
+                        	<li>{{ err }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+                <p>
+                    <label for="user_name">User Name</label>
+                    <template x-if="editUserName">
+                        <input required x-bind:value="userName" type="text" id="user_name" name="user_name" placeholder="HelloWorld">
+                    </template>
+                    <template x-if="!editUserName">
+                        <div>
+                                <input disabled x-bind:value="userName" type="text">
+                            <button type="button" x-on:click="editUserName = true" style="margin-top: 1rem;" class="is-full-width button secondary">Edit</button>
+                        </div>
+                    </template>
+                </p>
+                <p>
+                    <label for="full_name">Full Name</label>
+                    <template x-if="editFullName">
+                        <input required x-bind:value="fullName" type="text" id="full_name" name="full_name" placeholder="HelloWorld">
+                    </template>
+                    <template x-if="!editFullName">
+                        <div>
+                                <input disabled x-bind:value="fullName" type="text">
+                            <button type="button" x-on:click="editFullName = true" style="margin-top: 1rem;" class="is-full-width button secondary">Edit</button>
+                        </div>
+                    </template>
+                </p>
+                <p>
+                    <label for="oldPassword">Password</label>
+                    <template x-if="editPassword">
+                        <div>
+                            <input required x-bind:type="showPassword? 'text' : 'password'" id="oldPassword" name="old_password" placeholder="Actual password">
+                            <input style="margin-top: 1rem;" required x-bind:type="showPassword? 'text' : 'password'" id="newPassword" name="new_password" placeholder="New password">
+                            <input required x-bind:type="showPassword? 'text' : 'password'" id="confirmNewPassword" name="confirm_new_password" placeholder="Confirm new password">
+                        </div>
+                    </template>
+                    <template x-if="!editPassword">
+                        <div>
+                            <input disabled type="password" value="{{ '*' * 8 }}">
+                            <button type="button" x-on:click="editPassword = true" style="margin-top: 1rem;" class="is-full-width button secondary">Edit</button>
+                        </div>
+                    </template>
+                </p>
+                <p x-show="editPassword">
+                    <label for="showPassword"><input x-on:click="showPassword = !showPassword" type="checkbox" id="showPassword"> Show password</label>
+                </p>
+            </div>
+            <br>
+            <footer class="is-right">
+                <button x-bind:disabled="!(editPassword || editFullName || editUserName)" class="button primary" type="submit">Submit</button>
+            </footer>
+        </form>
+    </div>
+{% endblock %}
