@@ -1,12 +1,14 @@
 {% extends "layouts/base.html" %}
-{% set title = "LogIn" %}
+
+{% set header = True %}
+{% set title = "New Post" %}
 
 {% block body %}
     <br>
     <div class="row is-center ">
-        <form accept-charset="{{ url_for('users.login_action') }}" method="POST" class="card col-4">
+        <form accept-charset="{{ url_for('posts.create_action') }}" method="POST" class="card col-4">
             <header class="is-center">
-                <h1>LogIn</h1>
+                <h1>New Post</h1>
             </header>
             <div x-data="{showPassword: false}">
                 {% if error %}
@@ -21,18 +23,12 @@
                     {% endif %}
                 {% endif %}
                 <p>
-                    <label for="user_name">User Name</label>
-                    <input required value="{{ user_name or '' }}" type="text" id="user_name" name="user_name" placeholder="HelloWorld">
+                    <label for="title">Title</label>
+                    <input required type="text" id="title" name="title" placeholder="I'm great!">
                 </p>
                 <p>
-                    <label for="password">Password</label>
-                    <input required x-bind:type="showPassword? 'text' : 'password'" id="password" name="password" placeholder="S3cur3P455w0rd">
-                </p>
-                <p>
-                    <label for="showPassword"><input x-on:click="showPassword = !showPassword" type="checkbox" id="showPassword"> Show password</label>
-                </p>
-                <p>
-                    <a href="{{ url_for('users.register_form') }}">No account?, Register now!</a>
+                    <label for="content">Content (Optional)</label>
+                    <textarea class="is-full-width" rows="10" id="content" name="content" placeholder="Something..."></textarea>
                 </p>
             </div>
             <br>

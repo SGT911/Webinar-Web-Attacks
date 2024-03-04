@@ -56,6 +56,7 @@ class MysqlUnsafeRepository(PostRepository, TableUnsafeEnsure):
                 cursor.execute('''
                     SELECT `TITLE`, `USER_NAME`, `CONTENT`, `ID`
                         FROM `{table!s}`
+                    ORDER BY `CREATION_DATE` DESC
                 '''.format(table=self.TABLE_NAME))
 
                 data = cursor.fetchall()
