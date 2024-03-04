@@ -31,3 +31,46 @@ def login_action():
         user_name=data['user_name'],
         error=message,
     ))
+
+
+@router.route('/register', methods=['GET'])
+def register_form():
+    return make_response(render_template('users/register.html'))
+
+
+@router.route('/register', methods=['POST'])
+def register_action():
+    data = request.form.copy()
+    message = None
+    try:
+        user = User(data['user_name'], data['full_name'], data['password'])  # Validate form data
+
+        current_app.config['USER_REPOSITORY'].create(user)
+    except AssertionError as err:
+        message = get_error_message(*err.args)
+        message = f'{err.args[0]}: {message}'
+    else:
+        return make_response(redirect(url_for('users.login_form')))
+
+    return make_response(render_template(
+        'users/register.html',
+        user_name=data['user_name'],
+        full_name=data['full_name'],
+        error=message,
+    ))
+
+
+@router.route('/logout', methods=['GET'])
+def logout():
+    session.clear()
+    return make_response(redirect(url_for('home')))
+
+
+@router.route('/profile', methods=['GET'])
+def profile_form():
+    pass
+
+
+@router.route('/profile', methods=['POST'])
+def profile_action():
+    pass

@@ -10,6 +10,7 @@ from infrastructure.repositories.users import MysqlUnsafeRepository as UserMysql
 from infrastructure.repositories.posts import MysqlUnsafeRepository as PostMysqlUnsafeRepository
 
 from routes.users import router as users_router
+from routes.posts import router as posts_router
 
 load_dotenv()
 
@@ -38,10 +39,11 @@ def home():
     if 'session_id' not in session:
         return redirect(url_for('users.login_form'))
 
-    return Response(repr(session), content_type='text/plain')
+    return redirect(url_for('posts.home'))
 
 
 app.register_blueprint(users_router, url_prefix='/users')
+app.register_blueprint(posts_router, url_prefix='/posts')
 
 if __name__ == '__main__':
     app.debug = True

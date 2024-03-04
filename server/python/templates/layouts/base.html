@@ -3,12 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Post It{% if title %} - {{ title }}{% endif %}</title>
-    <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+    <link rel="stylesheet" href="https://unpkg.com/chota">
     <script src="https://unpkg.com/alpinejs" defer></script>
     {% block header %}
     {% endblock %}
 </head>
 <body>
+    {% if header %}
+        <nav class="nav">
+            <div class="nav-left">
+                <a {% if request.endpoint == 'posts.home' %}class="active"{% endif %} href="{{ url_for('posts.home') }}">Home</a>
+                <a {% if request.endpoint == 'users.profile_form' %}class="active"{% endif %} href="{{ url_for('users.profile_form') }}">
+                    {% if user %}
+                        Profile (@{{ user.user_name | upper }})
+                    {% else %}
+                        Profile
+                    {% endif %}
+                </a>
+            </div>
+            <div class="nav-center">
+                <a class="brand" href="{{ url_for('home') }}">Post It!</a>
+            </div>
+            <div class="nav-right">
+                <a {% if request.endpoint == 'posts.create_form' %}class="active"{% endif %} href="{{ url_for('posts.create_form') }}">New</a>
+                <a style="color: var(--color-error)" href="{{ url_for('users.logout') }}">Log Out</a>
+            </div>
+        </nav>
+    {% endif %}
     {% block body %}
     {% endblock %}
 </body>

@@ -29,6 +29,7 @@ class Exporter(Generic[T], ABC):
     def load(self, data: T) -> Exporter:
         """
         Load a serializable instance of the model into the model
+
         :param data: Serializable instance
         :return: Model instance
         """

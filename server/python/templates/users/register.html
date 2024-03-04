@@ -1,13 +1,13 @@
 {% extends "layouts/base.html" %}
 
-{% set title = "LogIn" %}
+{% set title = "Register" %}
 
 {% block body %}
     <br>
     <div class="row is-center ">
-        <form accept-charset="{{ url_for('users.login_action') }}" method="POST" class="card col-4">
+        <form accept-charset="{{ url_for('users.register_action') }}" method="POST" class="card col-4">
             <header class="is-center">
-                <h1>LogIn</h1>
+                <h1>Register</h1>
             </header>
             <div x-data="{showPassword: false}">
                 {% if error %}
@@ -26,6 +26,10 @@
                     <input required value="{{ user_name or '' }}" type="text" id="user_name" name="user_name" placeholder="HelloWorld">
                 </p>
                 <p>
+                    <label for="full_name">Full Name</label>
+                    <input required value="{{ full_name or '' }}" type="text" id="full_name" name="full_name" placeholder="Peter Parker">
+                </p>
+                <p>
                     <label for="password">Password</label>
                     <input required x-bind:type="showPassword? 'text' : 'password'" id="password" name="password" placeholder="S3cur3P455w0rd">
                 </p>
@@ -33,7 +37,7 @@
                     <label for="showPassword"><input x-on:click="showPassword = !showPassword" type="checkbox" id="showPassword"> Show password</label>
                 </p>
                 <p>
-                    <a href="{{ url_for('users.register_form') }}">No account?, Register now!</a>
+                    <a href="{{ url_for('users.login_form') }}">Already have an account?, Sign In!</a>
                 </p>
             </div>
             <br>
