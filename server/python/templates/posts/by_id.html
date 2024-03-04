@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+
+{% set header = True %}
+{% set title = "Post #{:d}".format(post.id) %}
+
+{% block body %}
+    <br>
+    <div class="row is-center ">
+        <div class="card col-8">
+            <header>
+                <h1>{{ post.title }} - {{ post.date }}</h1>
+                <a href="{{ url_for('users.by_id', user_name=post.user_name) }}">
+                    <h3 style="color: var(--color-grey)">@{{ post.user_name }}</h3>
+                </a>
+            </header>
+            {% if post.content %}
+                <hr>
+                <pre>{{ post.content }}</pre>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

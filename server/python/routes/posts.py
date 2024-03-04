@@ -54,4 +54,11 @@ def create_action():
 
 @router.route('/view/<int:_id>', methods=['GET'])
 def by_id(_id: int):
-    pass
+    user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
+    post = current_app.config['POST_REPOSITORY'].by_id(_id)
+
+    return make_response(render_template(
+        'posts/by_id.html',
+        user=user,
+        post=post,
+    ))

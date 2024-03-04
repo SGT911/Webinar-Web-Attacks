@@ -155,7 +155,7 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
                 cursor.execute('''
                     SELECT `USER_NAME`, `FULL_NAME`
                         FROM `{table!s}`
-                    WHERE `USER_NAME` = {user_name!s}
+                    WHERE `USER_NAME` = '{user_name!s}'
                 '''.format(table=self.TABLE_NAME, user_name=user_name))
 
                 data = cursor.fetchone()

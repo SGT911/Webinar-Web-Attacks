@@ -103,4 +103,8 @@ def profile_action():
 
 @router.route('/view/<user_name>', methods=['GET'])
 def by_id(user_name: str):
-    pass
+    user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
+    _user = current_app.config['USER_REPOSITORY'].by_user_id(user_name)
+    posts = current_app.config['POST_REPOSITORY'].filter(user_name, user_name)
+
+    return make_response(render_template('users/by_id.html', user=user, _user=_user, posts=posts))

@@ -3,6 +3,7 @@ import domain.errors as err
 from typing import Optional, Union, TypeVar, Generic
 from abc import ABC, abstractmethod
 import re
+import datetime
 
 from domain.providers import PasswordHasher
 
@@ -147,7 +148,9 @@ class Post(Exporter[dict]):
         assert content is None or len(content) != 0, err.EMPTY.format(field='content')
         self._content = content
 
-    def __init__(self, title: str, user_name: str, content: Optional[str] = None, _id: Optional[int] = None):
+    def __init__(self, title: str, user_name: str, content: Optional[str] = None, _id: Optional[int] = None,
+                 date: Optional[datetime.date] = None):
+        self.date = date
         self.id = _id
         self.title = title
         self.user_name = user_name

@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% set header = True %}
+{% set title = "User @" + _user.user_name %}
+
+{% block body %}
+    <br>
+    <div class="row is-center ">
+        <div class="card col-8">
+            <header>
+                <h1 class="is-center">{{ _user.full_name | title }}&nbsp;<code>(@{{ _user.user_name }})</code></h1>
+            </header>
+        </div>
+        <div class="col-6">
+            <hr>
+        </div>
+        {% for post in posts %}
+            {% include 'posts/card.html' %}
+            <br>
+        {% endfor %}
+
+    </div>
+{% endblock %}

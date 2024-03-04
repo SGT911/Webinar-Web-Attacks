@@ -68,14 +68,14 @@ class MysqlUnsafeRepository(PostRepository, TableUnsafeEnsure):
             with conn.cursor() as cursor:
                 cursor: CursorBase = cursor
                 cursor.execute('''
-                    SELECT `TITLE`, `USER_NAME`, `CONTENT`, `ID`
+                    SELECT `TITLE`, `USER_NAME`, `CONTENT`, `ID`, `CREATION_DATE`
                         FROM `{table!s}`
                     WHERE `ID` = {id:d}
                 '''.format(table=self.TABLE_NAME, id=_id))
 
                 data = cursor.fetchone()
                 assert data is not None, err.NOT_FOUND.format(model='post', id=_id)
-                return Post(title=data[0], user_name=data[1], content=data[2], _id=data[3])
+                return Post(title=data[0], user_name=data[1], content=data[2], _id=data[3], date=data[4])
 
     @TableUnsafeEnsure.ensure_table_exists
     def create(self, model: Post) -> int:
@@ -142,7 +142,8 @@ class MysqlUnsafeRepository(PostRepository, TableUnsafeEnsure):
                 cursor.execute('''
                     SELECT `TITLE`, `USER_NAME`, `CONTENT`, `ID`
                         FROM `{table!s}`
-                    WHERE `TITLE` LIKE '%{title!s}%' AND `USER_NAME` LIKE '%{user_name!s}%'
+                    WHERE `TITLE` LIKE '%{title!s}%' OR `USER_NAME` LIKE '%{user_name!s}%'
+                    ORDER BY `CREATION_DATE` DESC, `ID` DESC
                 '''.format(table=self.TABLE_NAME, title=title, user_name=user_name))
 
                 data = cursor.fetchall()

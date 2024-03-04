@@ -7,23 +7,7 @@
     <br>
     <div class="row is-center ">
         {% for post in posts %}
-        	<div
-                    class="card col-8"
-                    x-data="{url: '{{ url_for('posts.by_id', _id=post.id) }}'}"
-                    x-on:click="location.href = url"
-                    style="cursor: pointer;"
-            >
-                <header>
-                    <h2>{{ post.title }}</h2>
-                    <a href="{{ url_for('users.by_id', user_name=post.user_name) }}">
-                        <h6 style="color: var(--color-grey)">@{{ post.user_name }}</h6>
-                    </a>
-                </header>
-                {% if post.content %}
-                    <hr>
-                    <pre>{{ post.content }}</pre>
-                {% endif %}
-            </div>
+        	{% include 'posts/card.html' %}
             <br>
         {% endfor %}
 
