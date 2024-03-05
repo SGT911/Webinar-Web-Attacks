@@ -6,8 +6,14 @@ from os import environ as env
 from domain.providers import PasswordHasher
 from infrastructure.providers import PASSWORD_HASHER_PROVIDERS
 
-from infrastructure.repositories.users import MysqlUnsafeRepository as UserMysqlUnsafeRepository
-from infrastructure.repositories.posts import MysqlUnsafeRepository as PostMysqlUnsafeRepository
+from infrastructure.repositories.users import (
+    MysqlUnsafeRepository as UserMysqlUnsafeRepository,
+    MysqlRepository as UserMysqlSafeRepository
+)
+from infrastructure.repositories.posts import (
+    MysqlUnsafeRepository as PostMysqlUnsafeRepository,
+    MysqlRepository as PostMysqlSafeRepository
+)
 
 from routes.users import router as users_router
 from routes.posts import router as posts_router
@@ -30,6 +36,9 @@ app.config['PASSWORD_HASHER'] = PasswordHasher
 if CONFIG_REPOSITORY_PROVIDER == 'MYSQL_UNSAFE':
     app.config['USER_REPOSITORY'] = UserMysqlUnsafeRepository()
     app.config['POST_REPOSITORY'] = PostMysqlUnsafeRepository()
+elif CONFIG_REPOSITORY_PROVIDER == 'MYSQL_SAFE':
+    app.config['USER_REPOSITORY'] = UserMysqlSafeRepository()
+    app.config['POST_REPOSITORY'] = PostMysqlSafeRepository()
 else:
     raise AssertionError(f'unknown repository provider: {CONFIG_REPOSITORY_PROVIDER}')
 

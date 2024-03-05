@@ -40,3 +40,24 @@ class TableUnsafeEnsure(ABC):
             return fx(self, *args, **kwargs)
 
         return wrapper
+
+
+class TableEnsure(TableUnsafeEnsure, ABC):
+    _table_exists = False
+
+    @staticmethod
+    def ensure_table_exists(fx: Callable):
+        """
+        Decorator to ensure and create table if it does not exist
+        :param fx: Function to wraps
+        :return: Wrapped function
+        """
+        @wraps(fx)
+        def wrapper(self: TableUnsafeEnsure, *args, **kwargs):
+            if not self._table_exists:
+                self._table_exists = self.table_exists
+                if self._table_exists:
+                    self.create_table()
+            return fx(self, *args, **kwargs)
+
+        return wrapper
