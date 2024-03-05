@@ -43,7 +43,7 @@ class TableUnsafeEnsure(ABC):
 
 
 class TableEnsure(TableUnsafeEnsure, ABC):
-    _table_exists = False
+    cache_table_exists = False
 
     @staticmethod
     def ensure_table_exists(fx: Callable):
@@ -54,9 +54,9 @@ class TableEnsure(TableUnsafeEnsure, ABC):
         """
         @wraps(fx)
         def wrapper(self: TableUnsafeEnsure, *args, **kwargs):
-            if not self._table_exists:
-                self._table_exists = self.table_exists
-                if self._table_exists:
+            if not self.cache_table_exists:
+                self.cache_table_exists = self.table_exists
+                if not self.cache_table_exists:
                     self.create_table()
             return fx(self, *args, **kwargs)
 

@@ -334,6 +334,8 @@ class MysqlRepository(PostRepository, TableEnsure):
                         `CREATION_DATE` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         
                         FOREIGN KEY (`USER_NAME`) REFERENCES `users` (`USER_NAME`)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE
                     ); 
                 ''')
 
