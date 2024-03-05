@@ -38,9 +38,7 @@ async def task_stream(method, endpoint, data, loop):
         if method == 'GET':
             callback = lambda: http_client.get(endpoint)
         else:
-            _data = urlencode(data).encode()
-            headers = {'Content-Type': 'application/x-www-form'}
-            callback = lambda: http_client.request(method, endpoint, headers=headers, content=_data)
+            callback = lambda: http_client.request(method, endpoint, data=data)
         while True:
             loop.create_task(make_request(callback))
             loop.create_task(make_request(callback))
