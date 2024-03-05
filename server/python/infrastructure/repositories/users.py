@@ -180,6 +180,9 @@ class MysqlRepository(UserRepository, TableEnsure):
                 ''', dict(user_name=user_name))
 
                 data = cursor.fetchone()
+                if data is None:
+                    raise AssertionError(err.INVALID_CREDENTIAL)
+
                 user = User(user_name=data[0], full_name=data[1], password=data[2])
                 assert user.verify_password(password), err.INVALID_CREDENTIAL
 
