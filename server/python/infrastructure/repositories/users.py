@@ -96,6 +96,14 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
 
     @TableUnsafeEnsure.ensure_table_exists
     def create(self, model: User) -> int:
+        try:
+            _ = self.by_user_id(model.user_name)
+        except AssertionError:
+            # User no exists
+            pass
+        else:
+            raise AssertionError(err.ALREADY_EXISTS.format('user', model.user_name))
+
         with self.__connection as conn:
             with conn.cursor() as cursor:
                 cursor: CursorBase = cursor
@@ -243,6 +251,14 @@ class MysqlRepository(UserRepository, TableEnsure):
 
     @TableEnsure.ensure_table_exists
     def create(self, model: User) -> int:
+        try:
+            _ = self.by_user_id(model.user_name)
+        except AssertionError:
+            # User no exists
+            pass
+        else:
+            raise AssertionError(err.ALREADY_EXISTS.format('user', model.user_name))
+
         with self.__connection as conn:
             with conn.cursor() as cursor:
                 cursor: CursorBase = cursor

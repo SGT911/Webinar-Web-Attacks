@@ -10,6 +10,7 @@ _MESSAGES = {
     _get_error_name(EQUALS): "field {0!s} not suffer change",
     _get_error_name(INVALID_CREDENTIAL): "invalid credentials",
     _get_error_name(NOT_FOUND): "entity {0!s} with id {1!r} was not found",
+    _get_error_name(ALREADY_EXISTS): "entity {0!s} with id {1!r} already exists",
     _get_error_name(PASSWORD_NOT_MATCH): "passwords must be match",
 }
 
