@@ -33,6 +33,7 @@ def fork_worker(method, endpoint, data):
 
 
 async def task_stream(method, endpoint, data, loop):
+    print(f'Starting {multiprocessing.current_process().pid}')
     async with AsyncClient() as http_client:
         if method == 'GET':
             callback = lambda: http_client.get(endpoint)
@@ -42,13 +43,15 @@ async def task_stream(method, endpoint, data, loop):
             callback = lambda: http_client.request(method, endpoint, headers=headers, content=_data)
         while True:
             loop.create_task(make_request(callback))
+            await asyncio.sleep(0)
 
 
 async def make_request(fx):
+    print('Request', multiprocessing.current_process().pid)
     try:
         await fx()
-    except Exception:
-        pass
+    except Exception as err:
+        print('Error', multiprocessing.current_process().pid, err)
 
 
 if __name__ == '__main__':
