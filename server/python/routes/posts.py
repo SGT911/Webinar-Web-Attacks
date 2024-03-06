@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, make_response, render_template, session, request, redirect, url_for
 from domain.models import Post
 from domain.errors.messages import get_error_message
+import domain.errors as err_codes
 from routes import ensure_session
 
 router = Blueprint('posts', __name__)
@@ -37,6 +38,9 @@ def create_action():
     message = None
 
     try:
+        token = data.get(current_app.config['FORM_SECURITY_PROVIDER'].get_target_key())
+        assert current_app.config['FORM_SECURITY_PROVIDER'].validate(token), err_codes.FORBIDDEN
+
         content = data.get('content', None)
         if content == '':
             content = None

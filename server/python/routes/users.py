@@ -17,6 +17,9 @@ def login_action():
     data = request.form.copy()
     message = None
     try:
+        token = data.get(current_app.config['FORM_SECURITY_PROVIDER'].get_target_key())
+        assert current_app.config['FORM_SECURITY_PROVIDER'].validate(token), err_codes.FORBIDDEN
+
         User(data['user_name'], 'No Name', data['password'])  # Validate form data
 
         user, _id = current_app.config['USER_REPOSITORY'].by_login(data['user_name'], data['password'])
@@ -45,6 +48,9 @@ def register_action():
     data = request.form.copy()
     message = None
     try:
+        token = data.get(current_app.config['FORM_SECURITY_PROVIDER'].get_target_key())
+        assert current_app.config['FORM_SECURITY_PROVIDER'].validate(token), err_codes.FORBIDDEN
+
         user = User(data['user_name'], data['full_name'], data['password'])  # Validate form data
 
         current_app.config['USER_REPOSITORY'].create(user)
@@ -83,6 +89,9 @@ def profile_action():
     message = None
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
     try:
+        token = data.get(current_app.config['FORM_SECURITY_PROVIDER'].get_target_key())
+        assert current_app.config['FORM_SECURITY_PROVIDER'].validate(token), err_codes.FORBIDDEN
+
         copy_user = User.load(user.export())
         if 'old_password' in data:
             assert data['new_password'] == data['confirm_new_password'], err_codes.PASSWORD_NOT_MATCH

@@ -72,6 +72,9 @@
                 <p x-show="editPassword">
                     <label for="showPassword"><input x-on:click="showPassword = !showPassword" type="checkbox" id="showPassword"> Show password</label>
                 </p>
+                <p>
+                    {{ form_security() }}
+                </p>
             </div>
             <br>
             <footer class="is-right">
