@@ -49,9 +49,9 @@ class User(Exporter[dict]):
 
     @user_name.setter
     def user_name(self, user_name: str) -> None:
-        assert 4 <= len(user_name) <= 16, err.LENGTH_NOT_VALID.format(field='user_name', min=4, max=16)
-        assert _user_name_pattern.match(user_name) is not None, \
-            err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern.pattern)
+        # assert 4 <= len(user_name) <= 16, err.LENGTH_NOT_VALID.format(field='user_name', min=4, max=16)
+        # assert _user_name_pattern.match(user_name) is not None, \
+        #     err.PATTERN_NOT_VALID.format(field='user_name', pattern=_user_name_pattern.pattern)
         self._user_name = user_name.upper()
 
     @property

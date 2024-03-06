@@ -14,7 +14,9 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
 
     @property
     def __connection(self) -> PooledMySQLConnection:
-        return get_mysql_pool().get_connection()
+        pool = get_mysql_pool()
+        pool.set_config(autocommit=True)
+        return pool.get_connection()
 
     @property
     def table_exists(self) -> bool:
@@ -44,13 +46,12 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
                     ); 
                 ''')
 
-                conn.commit()
-
     @TableUnsafeEnsure.ensure_table_exists
     def by_login(self, user_name: str, password: str) -> Tuple[User, int]:
         with self.__connection as conn:
             with conn.cursor() as cursor:
                 cursor: CursorBase = cursor
+
                 cursor.execute('''
                     SELECT `USER_NAME`, `FULL_NAME`, `PASSWORD`, `ID`
                         FROM `{table!s}`
@@ -117,8 +118,6 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
                     password=model.password.decode(),
                 ))
 
-                conn.commit()
-
                 return cursor.lastrowid
 
     @TableUnsafeEnsure.ensure_table_exists
@@ -141,8 +140,6 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
                             WHERE `ID` = {id:d}
                     '''.format(table=self.TABLE_NAME, password=model.password.decode(), id=_id))
 
-                conn.commit()
-
     @TableUnsafeEnsure.ensure_table_exists
     def delete(self, _id: int):
         with self.__connection as conn:
@@ -155,8 +152,6 @@ class MysqlUnsafeRepository(UserRepository, TableUnsafeEnsure):
                 if cursor.rowcount == 0:
                     conn.rollback()
                     raise AssertionError(err.NOT_FOUND.format(model='user', id=_id))
-
-                conn.commit()
 
     @TableUnsafeEnsure.ensure_table_exists
     def by_user_id(self, user_name: str) -> User:

