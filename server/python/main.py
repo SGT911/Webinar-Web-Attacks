@@ -1,4 +1,4 @@
-from flask import Flask, Response, url_for, redirect, session
+from flask import Flask, url_for, redirect, session
 from flask_session import Session
 from dotenv import load_dotenv
 from os import environ as env
@@ -21,9 +21,10 @@ from routes.posts import router as posts_router
 load_dotenv()
 
 app = Flask(__name__, static_folder=None)
-app.secret_key = env.get('SECRET_KEY', 'test')
-app.config['SESSION_TYPE'] = 'null'
-Session()
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
+Session(app)
 
 CONFIG_PASSWORD_HASHER = env.get('DOMAIN_PASSWORD_HASHER', 'MD5')
 CONFIG_REPOSITORY_PROVIDER = env.get('REPOSITORY_PROVIDER', None)

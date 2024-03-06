@@ -1,11 +1,13 @@
 from flask import Blueprint, current_app, make_response, render_template, session, request, redirect, url_for
 from domain.models import Post
 from domain.errors.messages import get_error_message
+from routes import ensure_session
 
 router = Blueprint('posts', __name__)
 
 
 @router.route('/', methods=['GET'])
+@ensure_session
 def home():
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
     posts = current_app.config['POST_REPOSITORY'].list()
@@ -17,6 +19,7 @@ def home():
 
 
 @router.route('/create', methods=['GET'])
+@ensure_session
 def create_form():
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
     return make_response(render_template(
@@ -26,6 +29,7 @@ def create_form():
 
 
 @router.route('/create', methods=['POST'])
+@ensure_session
 def create_action():
     data = request.form.copy()
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
@@ -53,6 +57,7 @@ def create_action():
 
 
 @router.route('/view/<int:_id>', methods=['GET'])
+@ensure_session
 def by_id(_id: int):
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
     post = current_app.config['POST_REPOSITORY'].by_id(_id)

@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, make_response, render_template, reques
 from domain.models import User
 import domain.errors as err_codes
 from domain.errors.messages import get_error_message
+from routes import ensure_session
 
 router = Blueprint('users', __name__)
 
@@ -62,18 +63,21 @@ def register_action():
 
 
 @router.route('/logout', methods=['GET'])
+@ensure_session
 def logout():
     session.clear()
     return make_response(redirect(url_for('home')))
 
 
 @router.route('/profile', methods=['GET'])
+@ensure_session
 def profile_form():
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
     return make_response(render_template('users/profile.html', user=user))
 
 
 @router.route('/profile', methods=['POST'])
+@ensure_session
 def profile_action():
     data = request.form.copy()
     message = None
@@ -102,6 +106,7 @@ def profile_action():
 
 
 @router.route('/view/<user_name>', methods=['GET'])
+@ensure_session
 def by_id(user_name: str):
     user = current_app.config['USER_REPOSITORY'].by_id(session['session_id'])
     _user = current_app.config['USER_REPOSITORY'].by_user_id(user_name)
